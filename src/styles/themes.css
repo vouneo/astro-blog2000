@@ -1,25 +1,26 @@
 /* Temas usando solo CSS custom properties */
 
-/* Tema Synthwave */
-[data-theme="synthwave"] {
-  --theme-bg: #1a103d;
-  --theme-text: #f5e1ff;
-  --theme-text-secondary: #d0b3f2;
-  --theme-header-bg: #3a0ca3;
+/* Tema Crimson Gothic */
+[data-theme="crimson-gothic"] {
+  --theme-bg: #0a0a0a;
+  --theme-text: #e8e8e8;
+  --theme-text-secondary: #b8b8b8;
+  --theme-header-bg: #000000;
   --theme-header-text: #ffffff;
-  --theme-link: #ff6ec7;
-  --theme-accent: #ff00e6;
-  --theme-accent-hover: #ff5cf0;
-  --theme-card-bg: #2c145a;
-  --theme-card-border: #6d23f7;
-  --theme-muted: #9c7dd7;
-  --theme-button-bg: #47126b;
-  --theme-button-text: #f5e1ff;
-  --theme-button-hover-text: #000;
+  --theme-link: #dc2626;
+  --theme-accent: #ef4444;
+  --theme-accent-hover: #f87171;
+  --theme-card-bg: #1a1a1a;
+  --theme-card-border: #404040;
+  --theme-muted: #888888;
+  --theme-button-bg: #1f1f1f;
+  --theme-button-text: #ffffff;
+  --theme-button-hover-text: #000000;
 }
 
-[data-theme="synthwave"] .retro-header {
-  background: linear-gradient(90deg, #3a0ca3, #7209b7);
+[data-theme="crimson-gothic"] .retro-header {
+  background: linear-gradient(135deg, #000000, #1a1a1a);
+  border-bottom: 2px solid var(--theme-accent);
 }
 
 /* Tema Hacker */
@@ -45,8 +46,9 @@
 }
 
 /* Efectos especiales por tema */
-[data-theme="synthwave"] .retro-card:hover {
-  box-shadow: 0 8px 25px rgba(255, 0, 230, 0.3);
+[data-theme="crimson-gothic"] .retro-card:hover {
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2);
+  border-color: var(--theme-accent);
 }
 
 [data-theme="hacker"] .retro-card:hover {
@@ -62,15 +64,113 @@
   text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
 }
 
-[data-theme="synthwave"] .nav-link:hover {
-  text-shadow: 0 0 10px #ff00e6, 0 0 20px #ff00e6, 0 0 30px #ff5cf0;
+[data-theme="crimson-gothic"] .nav-link:hover {
+  text-shadow: 0 0 8px #ef4444, 0 0 16px #ef4444, 0 0 24px #dc2626;
+  color: var(--theme-accent);
 }
 
 [data-theme="retro"] .nav-link:hover {
   text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF66FF;
 }
 
+/* Efectos especiales para Crimson Gothic */
+[data-theme="crimson-gothic"] .retro-card {
+  background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+  border: 1px solid #333333;
+}
+
+[data-theme="crimson-gothic"] .retro-button:hover {
+  background: linear-gradient(135deg, var(--theme-accent), #dc2626);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+[data-theme="crimson-gothic"] .category-tag {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--theme-accent);
+  color: var(--theme-accent);
+}
+
+/* Typography elegante para el tema gótico */
+[data-theme="crimson-gothic"] .card-title,
+[data-theme="crimson-gothic"] h1,
+[data-theme="crimson-gothic"] h2,
+[data-theme="crimson-gothic"] h3 {
+  color: var(--theme-text);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="crimson-gothic"] .header-title {
+  color: var(--theme-accent);
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
 /* Transiciones suaves entre temas */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Agregar estas reglas adicionales al final de themes.css */
+
+/* Mejoras tipográficas para Crimson Gothic */
+[data-theme="crimson-gothic"] {
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+[data-theme="crimson-gothic"] .header-title,
+[data-theme="crimson-gothic"] .card-title {
+  font-family: 'Verdana', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* Efectos de glassmorphism sutil */
+[data-theme="crimson-gothic"] .retro-card {
+  backdrop-filter: blur(10px);
+  background: rgba(26, 26, 26, 0.9);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Accent elegante para el footer */
+[data-theme="crimson-gothic"] footer {
+  background: linear-gradient(135deg, #000000, #1a0000);
+  border-top: 1px solid var(--theme-accent);
+}
+
+/* Hover states más sofisticados */
+[data-theme="crimson-gothic"] .nav-link {
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+[data-theme="crimson-gothic"] .retro-card {
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+[data-theme="crimson-gothic"] .retro-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+/* Elementos decorativos */
+[data-theme="crimson-gothic"] .card-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--theme-accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="crimson-gothic"] .retro-card:hover .card-content::before {
+  opacity: 0.7;
+}
+
+/* Scrollbar elegante */
+[data-theme="crimson-gothic"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--theme-accent), #dc2626);
+  border-radius: 6px;
+}
+
+[data-theme="crimson-gothic"] ::-webkit-scrollbar-track {
+  background: #0a0a0a;
 }

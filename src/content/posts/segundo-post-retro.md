@@ -6,7 +6,7 @@ categories:
   - "ejemplo"
   - "retro"
 published: true
-thumbnail: "/img/thumbnails/post2.jpg"
+thumbnail: "/img/thumbnails/post12.jpg"
 ---
 
 Este es mi segundo post de ejemplo.

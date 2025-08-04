@@ -7,10 +7,10 @@ categories:
   - "ideas"
   - "música"
 published: true
-thumbnail: "/img/thumbnails/post1.jpg"
+thumbnail: "/img/thumbnails/post1.jpeg"
 ---
 
-![black-metal](/lib/images/bm2.jpeg)
+![black-metal](/img/thumbnails/post1.jpeg)
 
 Desde hace un tiempo, me resulta difícil hablar del género del metal sin considerar sus múltiples subcategorías, y el Black Metal (BM) se destaca como un caso particular en esta diversidad conceptual. En ocasiones, prescinde incluso de guitarras y baterías, alejándose notablemente de la influencia de bandas como Black Sabbath.
 
@@ -26,7 +26,7 @@ title="old wainds">
 
 Este negro no solo representa el "lado oscuro", sino también lo desconocido, el universo, la noche, entre otros, siendo el equivalente religioso de la "luz".
 
-![black-metal](/lib/images/bm.jpg)
+![black-metal](/img/thumbnails/post12.jpg)
 
 Personalmente, no me atrae el Black Metal desde una perspectiva exclusivamente metalera. No me interesa la imagen mediática que promueve lo "políticamente incorrecto", haciendo referencia a ciertos subgéneros que abrazan ideologías controvertidas.
 
