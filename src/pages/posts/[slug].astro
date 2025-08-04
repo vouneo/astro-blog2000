@@ -1,0 +1,216 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat('es-ES', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+};
+
+// Obtener posts relacionados (mismo contenido, excluyendo el actual)
+const allPosts = await getCollection('posts', ({ data }) => data.published !== false);
+const relatedPosts = allPosts
+  .filter(p => p.slug !== post.slug)
+  .slice(0, 3);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <!-- Breadcrumb -->
+  <nav class="mb-8 text-sm opacity-75">
+    <a href="/" class="nav-link">Inicio</a>
+    <span class="mx-2">→</span>
+    <span>Posts</span>
+    <span class="mx-2">→</span>
+    <span style="color: var(--theme-accent)">{post.data.title}</span>
+  </nav>
+
+  <!-- Post header -->
+  <header class="mb-12 text-center">
+    <h1 class="text-3xl md:text-5xl font-bold mb-6 leading-tight animate-fade-in">
+      <span style="color: var(--theme-accent)">{post.data.title}</span>
+    </h1>
+    
+    <div class="flex flex-wrap justify-center items-center gap-4 mb-6 text-sm">
+      <time 
+        datetime={post.data.date.toISOString()}
+        class="flex items-center gap-2"
+        style="color: var(--theme-muted)"
+      >
+        <span>📅</span>
+        {formatDate(post.data.date)}
+      </time>
+      
+      {post.data.categories && post.data.categories.length > 0 && (
+        <div class="flex items-center gap-2">
+          <span style="color: var(--theme-muted)">🏷️</span>
+          <div class="flex flex-wrap gap-2">
+            {post.data.categories.map(category => (
+              <span 
+                class="px-2 py-1 text-xs rounded-full border"
+                style="
+                  background-color: var(--theme-card-bg);
+                  border-color: var(--theme-accent);
+                  color: var(--theme-accent);
+                "
+              >
+                #{category}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+    
+    <p class="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed" style="color: var(--theme-text-secondary)">
+      {post.data.description}
+    </p>
+  </header>
+
+  <!-- Post content -->
+  <article class="prose prose-lg max-w-none mb-16">
+    <div class="retro-card p-8 md:p-12">
+      <Content />
+    </div>
+  </article>
+
+  <!-- Navigation between posts -->
+  <nav class="mb-12">
+    <div class="flex flex-col sm:flex-row justify-between gap-4">
+      <a 
+        href="/" 
+        class="retro-button text-center flex items-center justify-center gap-2"
+      >
+        ← Volver al inicio
+      </a>
+      
+      <button 
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="retro-button flex items-center justify-center gap-2"
+      >
+        ↑ Subir
+      </button>
+    </div>
+  </nav>
+
+  <!-- Related posts -->
+  {relatedPosts.length > 0 && (
+    <section class="mt-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <span style="color: var(--theme-accent)">Otros posts</span>
+      </h2>
+      
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {relatedPosts.map((relatedPost) => (
+          <div class="retro-card p-6">
+            <h3 class="font-bold mb-2">
+              <a href={`/posts/${relatedPost.slug}`} class="nav-link">
+                {relatedPost.data.title}
+              </a>
+            </h3>
+            <p class="text-sm mb-4" style="color: var(--theme-text-secondary)">
+              {relatedPost.data.description}
+            </p>
+            <time 
+              datetime={relatedPost.data.date.toISOString()}
+              class="text-xs opacity-75"
+              style="color: var(--theme-muted)"
+            >
+              {formatDate(relatedPost.data.date)}
+            </time>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Comments placeholder -->
+  <section class="mt-16">
+    <div class="retro-card p-8 text-center">
+      <h3 class="text-xl font-bold mb-4" style="color: var(--theme-accent)">
+        💬 Comentarios
+      </h3>
+      <p class="mb-4" style="color: var(--theme-text-secondary)">
+        El sistema de comentarios estará disponible pronto.
+      </p>
+      <p class="text-sm opacity-75">
+        Por ahora, puedes contactarme directamente para compartir tus pensamientos.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Estilos específicos para el contenido del post */
+  article .retro-card {
+    line-height: 1.8;
+  }
+
+  /* Mejorar legibilidad del contenido */
+  article h2, article h3, article h4 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  article p {
+    margin-bottom: 1.5rem;
+  }
+
+  article img {
+    margin: 2rem auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  article iframe {
+    margin: 2rem auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    max-width: 100%;
+  }
+
+  /* Responsive para iframes de YouTube */
+  @media (max-width: 640px) {
+    article iframe {
+      width: 100%;
+      height: 250px;
+    }
+  }
+
+  /* Animaciones de entrada */
+  header {
+    animation: fade-in-up 0.6s ease-out;
+  }
+
+  article {
+    animation: fade-in-up 0.6s ease-out 0.2s both;
+  }
+
+  nav:first-child {
+    animation: fade-in-up 0.6s ease-out 0.1s both;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="retro-header mt-16">
+  <div class="content-container">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 py-6">
+      <div class="text-center md:text-left">
+        <p class="mb-2">
+          © 2000-{currentYear} <strong>vouneo</strong>
+        </p>
+        <p class="text-sm opacity-75">
+          Construido con 🖤 y nostalgia digital
+        </p>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 text-sm opacity-75">
+          <span>Hecho con</span>
+          <a 
+            href="https://astro.build" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="nav-link text-xs hover:animate-glow"
+          >
+            🚀 Astro
+          </a>
+          <span>+</span>
+          <a 
+            href="https://tailwindcss.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="nav-link text-xs hover:animate-glow"
+          >
+            🎨 Tailwind
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Signature retro ASCII art pequeño -->
+    <div class="text-center py-4 border-t border-opacity-20" style="border-color: var(--theme-accent)">
+      <pre class="text-xs opacity-50 font-mono leading-tight">
+░▒▓█ v0ュn∈0'ร bl0g █▓▒░
+      </pre>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    /* Gradiente invertido para footer */
+    background: linear-gradient(135deg, var(--theme-card-bg), var(--theme-header-bg));
+    border-top: 3px solid var(--theme-accent);
+    border-bottom: none;
+  }
+
+  pre {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+  }
+
+  /* Animación sutil de "glow" para el ASCII art */
+  footer:hover pre {
+    animation: subtle-glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes subtle-glow {
+    from { opacity: 0.5; }
+    to { opacity: 0.7; }
+  }
+</style>

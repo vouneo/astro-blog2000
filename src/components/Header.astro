@@ -1,0 +1,93 @@
+---
+import ThemeSwitcher from './ThemeSwitcher.astro';
+---
+
+<header class="retro-header">
+  <div class="content-container">
+    <div class="header-content">
+      <div class="header-brand">
+        <img 
+          src="/img/gif.gif" 
+          alt="Logo del blog" 
+          class="header-logo"
+        />
+        <h1 class="header-title">
+          <a href="/" class="nav-link title-link">
+            vouneo's blog
+          </a>
+        </h1>
+      </div>
+      
+      <nav class="header-nav">
+        <a href="/" class="nav-link">Inicio</a>
+        <ThemeSwitcher />
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .header-logo {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .header-title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .title-link:hover {
+    text-decoration: none !important;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* Responsive */
+  @media (min-width: 768px) {
+    .header-content {
+      flex-direction: row;
+    }
+
+    .header-logo {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .header-title {
+      font-size: 2.25rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .header-logo {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>

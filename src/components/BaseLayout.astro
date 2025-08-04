@@ -1,0 +1,85 @@
+---
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import '../styles/global.css';
+import '../styles/themes.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "vouneo's blog retro" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es" data-theme="retro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕳️</text></svg>"
+    />
+  </head>
+  <body>
+    <Header />
+    <main class="content-container py-8">
+      <slot />
+    </main>
+    <Footer />
+    
+    <script>
+      // Sistema de temas modernizado
+      const themeManager = {
+        current: 'retro',
+        
+        setTheme(theme: string) {
+          this.current = theme;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('selectedTheme', theme);
+          this.updateThemeButtons();
+        },
+        
+        initTheme() {
+          const saved = localStorage.getItem('selectedTheme') || 'retro';
+          this.setTheme(saved);
+        },
+        
+        updateThemeButtons() {
+          document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+            const btnTheme = btn.getAttribute('data-theme-btn');
+            btn.classList.toggle('active', btnTheme === this.current);
+          });
+        }
+      };
+
+      // Inicializar tema al cargar
+      document.addEventListener('DOMContentLoaded', () => {
+        themeManager.initTheme();
+        
+        // Event listeners para botones de tema
+        document.querySelectorAll('[data-theme-btn]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const theme = btn.getAttribute('data-theme-btn');
+            if (theme) themeManager.setTheme(theme);
+          });
+        });
+      });
+
+      // Hacer disponible globalmente
+      (window as any).themeManager = themeManager;
+    </script>
+  </body>
+</html>
+
+<style>
+  /* Estilos para botones de tema activos */
+  [data-theme-btn].active {
+    background-color: var(--theme-accent) !important;
+    color: var(--theme-button-hover-text) !important;
+    box-shadow: 0 0 15px var(--theme-accent);
+  }
+</style>

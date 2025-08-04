@@ -1,0 +1,76 @@
+/* Temas usando solo CSS custom properties */
+
+/* Tema Synthwave */
+[data-theme="synthwave"] {
+  --theme-bg: #1a103d;
+  --theme-text: #f5e1ff;
+  --theme-text-secondary: #d0b3f2;
+  --theme-header-bg: #3a0ca3;
+  --theme-header-text: #ffffff;
+  --theme-link: #ff6ec7;
+  --theme-accent: #ff00e6;
+  --theme-accent-hover: #ff5cf0;
+  --theme-card-bg: #2c145a;
+  --theme-card-border: #6d23f7;
+  --theme-muted: #9c7dd7;
+  --theme-button-bg: #47126b;
+  --theme-button-text: #f5e1ff;
+  --theme-button-hover-text: #000;
+}
+
+[data-theme="synthwave"] .retro-header {
+  background: linear-gradient(90deg, #3a0ca3, #7209b7);
+}
+
+/* Tema Hacker */
+[data-theme="hacker"] {
+  --theme-bg: #0b0f0c;
+  --theme-text: #39ff14;
+  --theme-text-secondary: #1aff66;
+  --theme-header-bg: #001a00;
+  --theme-header-text: #39ff14;
+  --theme-link: #00ffcc;
+  --theme-accent: #00ff00;
+  --theme-accent-hover: #66ff66;
+  --theme-card-bg: #0f1f0f;
+  --theme-card-border: #33cc33;
+  --theme-muted: #66cc66;
+  --theme-button-bg: #003300;
+  --theme-button-text: #39ff14;
+  --theme-button-hover-text: #000;
+}
+
+[data-theme="hacker"] .retro-header {
+  background: linear-gradient(90deg, #001a00, #003300);
+}
+
+/* Efectos especiales por tema */
+[data-theme="synthwave"] .retro-card:hover {
+  box-shadow: 0 8px 25px rgba(255, 0, 230, 0.3);
+}
+
+[data-theme="hacker"] .retro-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 255, 0, 0.3);
+}
+
+[data-theme="retro"] .retro-card:hover {
+  box-shadow: 0 8px 25px rgba(255, 0, 255, 0.3);
+}
+
+/* Animaciones específicas por tema */
+[data-theme="hacker"] .nav-link:hover {
+  text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+}
+
+[data-theme="synthwave"] .nav-link:hover {
+  text-shadow: 0 0 10px #ff00e6, 0 0 20px #ff00e6, 0 0 30px #ff5cf0;
+}
+
+[data-theme="retro"] .nav-link:hover {
+  text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF66FF;
+}
+
+/* Transiciones suaves entre temas */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}

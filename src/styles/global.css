@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variables CSS para temas - Tema Retro 2000 (default) */
+:root, [data-theme="retro"] {
+  --theme-bg: #181818;
+  --theme-text: #E0E0E0;
+  --theme-text-secondary: #C0C0C0;
+  --theme-header-bg: #202020;
+  --theme-header-text: #FFFFFF;
+  --theme-link: #00BFFF;
+  --theme-accent: #FF00FF;
+  --theme-accent-hover: #FF66FF;
+  --theme-card-bg: #222222;
+  --theme-card-border: #555555;
+  --theme-muted: #A0A0A0;
+  --theme-button-bg: #2C2C2C;
+  --theme-button-text: #FFFFFF;
+  --theme-button-hover-text: #000000;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Verdana', Geneva, sans-serif;
+    background-color: var(--theme-bg);
+    color: var(--theme-text);
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fade-in 0.4s ease-out forwards;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Scrollbar personalizada */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--theme-bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--theme-accent);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--theme-accent-hover);
+  }
+}
+
+@layer components {
+  /* Header retro */
+  .retro-header {
+    background: linear-gradient(135deg, var(--theme-header-bg), var(--theme-card-bg));
+    color: var(--theme-header-text);
+    text-align: center;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border-bottom: 3px solid var(--theme-accent);
+  }
+
+  /* Tarjetas retro */
+  .retro-card {
+    background-color: var(--theme-card-bg);
+    border: 2px solid var(--theme-card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+  }
+
+  .retro-card:hover {
+    transform: scale(1.03);
+    border-color: var(--theme-accent-hover);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  }
+
+  /* Botones retro */
+  .retro-button {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--theme-accent);
+    background-color: var(--theme-button-bg);
+    color: var(--theme-button-text);
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+  }
+
+  .retro-button:hover {
+    background-color: var(--theme-accent-hover);
+    color: var(--theme-button-hover-text);
+    box-shadow: 0 0 10px var(--theme-accent-hover);
+  }
+
+  /* Enlaces de navegación */
+  .nav-link {
+    color: var(--theme-link);
+    margin: 0 0.5rem;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .nav-link:hover {
+    animation: neon-glow 0.8s ease-in-out infinite alternate;
+  }
+
+  /* Grid de posts */
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Container principal */
+  .content-container {
+    max-width: min(90vw, 1200px);
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* Estilos para contenido markdown */
+  .prose img {
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    margin: 2rem auto;
+    display: block;
+  }
+
+  .prose iframe {
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    margin: 2rem auto;
+    display: block;
+    max-width: 100%;
+  }
+
+  .prose h1, .prose h2, .prose h3 {
+    color: var(--theme-accent);
+  }
+
+  .prose a {
+    color: var(--theme-link);
+    text-decoration: none;
+  }
+
+  .prose a:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 5px var(--theme-accent);
+  }
+
+  .prose code {
+    background-color: var(--theme-card-bg);
+    color: var(--theme-text);
+    padding: 0.125rem 0.25rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes neon-glow {
+  0%, 100% {
+    text-shadow: 0 0 5px var(--theme-accent), 0 0 10px var(--theme-accent-hover);
+  }
+  50% {
+    text-shadow: 0 0 10px var(--theme-accent-hover), 0 0 20px var(--theme-accent-hover);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .prose iframe {
+    width: 100%;
+    height: 250px;
+  }
+}

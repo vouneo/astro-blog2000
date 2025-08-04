@@ -1,5 +1,17 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  integrations: [
+    tailwind({
+      // Permitir que Tailwind maneje los estilos base
+      applyBaseStyles: true,
+    })
+  ],
+  markdown: {
+    shikiConfig: {
+      theme: 'dracula',
+      wrap: true
+    }
+  }
+});
