@@ -1,0 +1,513 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Admin Panel - vouneo's blog" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es" data-admin-theme="crimson-dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>"
+    />
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <header class="admin-header">
+        <div class="admin-header-content">
+          <div class="header-left">
+            <h1 class="admin-title">
+              <a href="/admin">🕳️ vouneo's admin</a>
+            </h1>
+          </div>
+          <nav class="admin-nav">
+            <a href="/admin" class="admin-nav-link">Dashboard</a>
+            <a href="/admin/posts" class="admin-nav-link">Posts</a>
+            <a href="/" class="admin-nav-link" target="_blank">View Blog</a>
+            
+            <!-- Theme switcher -->
+            <div class="theme-switcher">
+              <button onclick="toggleAdminTheme()" class="theme-toggle-btn" title="Toggle theme">
+                🌓
+              </button>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      <main class="admin-main">
+        <slot />
+      </main>
+
+      <footer class="admin-footer">
+        <p>&copy; 2025 vouneo's blog admin</p>
+      </footer>
+    </div>
+
+    <script>
+      // Sistema de temas para admin
+      function toggleAdminTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-admin-theme');
+        const newTheme = currentTheme === 'crimson-dark' ? 'light' : 'crimson-dark';
+        
+        html.setAttribute('data-admin-theme', newTheme);
+        localStorage.setItem('admin-theme', newTheme);
+      }
+
+      // Cargar tema guardado
+      document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('admin-theme') || 'crimson-dark';
+        document.documentElement.setAttribute('data-admin-theme', savedTheme);
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  /* ===========================
+     ADMIN THEME SYSTEM
+  =========================== */
+
+  /* Variables base - Tema claro (Rails clásico) */
+  :root {
+    --admin-bg: #ffffff;
+    --admin-bg-secondary: #f8f9fa;
+    --admin-text: #333333;
+    --admin-text-secondary: #6c757d;
+    --admin-text-muted: #999999;
+    --admin-border: #dee2e6;
+    --admin-border-light: #e9ecef;
+    --admin-header-bg: #f8f9fa;
+    --admin-primary: #D1005E;
+    --admin-primary-hover: #b8004f;
+    --admin-danger: #dc3545;
+    --admin-danger-hover: #c82333;
+    --admin-success: #28a745;
+    --admin-warning: #ffc107;
+    --admin-shadow: rgba(0, 0, 0, 0.1);
+    --admin-shadow-hover: rgba(209, 0, 94, 0.15);
+  }
+
+  /* Tema oscuro Crimson Pink */
+  [data-admin-theme="crimson-dark"] {
+    --admin-bg: #0f0f0f;
+    --admin-bg-secondary: #1a1a1a;
+    --admin-text: #f8f9fa;
+    --admin-text-secondary: #d1d5db;
+    --admin-text-muted: #9ca3af;
+    --admin-border: #374151;
+    --admin-border-light: #2d3748;
+    --admin-header-bg: #000000;
+    --admin-primary: #D1005E;
+    --admin-primary-hover: #e6146f;
+    --admin-danger: #ff4757;
+    --admin-danger-hover: #ff6b7a;
+    --admin-success: #2ed573;
+    --admin-warning: #ffa502;
+    --admin-shadow: rgba(0, 0, 0, 0.4);
+    --admin-shadow-hover: rgba(209, 0, 94, 0.25);
+  }
+
+  /* Reset y base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: var(--admin-bg);
+    color: var(--admin-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .admin-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .admin-header {
+    background-color: var(--admin-header-bg);
+    border-bottom: 1px solid var(--admin-border);
+    padding: 16px 0;
+    box-shadow: 0 2px 8px var(--admin-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .admin-header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .admin-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--admin-text);
+  }
+
+  .admin-title a {
+    color: var(--admin-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .admin-title a:hover {
+    color: var(--admin-primary-hover);
+  }
+
+  .admin-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .admin-nav-link {
+    color: var(--admin-text-secondary);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .admin-nav-link:hover {
+    color: var(--admin-primary);
+  }
+
+  .admin-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--admin-primary);
+    transition: width 0.2s ease;
+  }
+
+  .admin-nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Theme toggle */
+  .theme-switcher {
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid var(--admin-border);
+  }
+
+  .theme-toggle-btn {
+    background: none;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    color: var(--admin-text-secondary);
+  }
+
+  .theme-toggle-btn:hover {
+    background-color: var(--admin-bg-secondary);
+    border-color: var(--admin-primary);
+    color: var(--admin-primary);
+  }
+
+  /* Main content */
+  .admin-main {
+    flex: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    width: 100%;
+  }
+
+  /* Footer */
+  .admin-footer {
+    background-color: var(--admin-header-bg);
+    border-top: 1px solid var(--admin-border);
+    padding: 20px 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--admin-text-muted);
+  }
+
+  /* ===========================
+     COMPONENTES GLOBALES ADMIN
+  =========================== */
+
+  /* Títulos de página */
+  :global(.page-title) {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--admin-text);
+    line-height: 1.2;
+  }
+
+  :global(.page-subtitle) {
+    font-size: 16px;
+    color: var(--admin-text-secondary);
+    margin-bottom: 32px;
+    line-height: 1.4;
+  }
+
+  /* Cards y contenedores */
+  :global(.admin-card) {
+    background-color: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px var(--admin-shadow);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  :global(.admin-card:hover) {
+    box-shadow: 0 4px 16px var(--admin-shadow-hover);
+  }
+
+  :global(.admin-card-header) {
+    background-color: var(--admin-bg-secondary);
+    border-bottom: 1px solid var(--admin-border);
+    padding: 20px 24px;
+  }
+
+  :global(.admin-card-header h3) {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--admin-text);
+    margin: 0;
+  }
+
+  :global(.admin-card-body) {
+    padding: 24px;
+  }
+
+  /* Tablas estilo moderno */
+  :global(.admin-table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    background-color: var(--admin-bg);
+  }
+
+  :global(.admin-table th) {
+    background-color: var(--admin-bg-secondary);
+    border-bottom: 2px solid var(--admin-border);
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--admin-text);
+  }
+
+  :global(.admin-table td) {
+    border-bottom: 1px solid var(--admin-border-light);
+    padding: 20px;
+    vertical-align: top;
+  }
+
+  :global(.admin-table tr:hover) {
+    background-color: var(--admin-bg-secondary);
+  }
+
+  /* Botones modernos */
+  :global(.admin-btn) {
+    background-color: var(--admin-primary);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    min-height: 44px;
+  }
+
+  :global(.admin-btn:hover) {
+    background-color: var(--admin-primary-hover);
+    box-shadow: 0 4px 16px var(--admin-shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  :global(.admin-btn.secondary) {
+    background-color: transparent;
+    color: var(--admin-text-secondary);
+    border-color: var(--admin-border);
+  }
+
+  :global(.admin-btn.secondary:hover) {
+    background-color: var(--admin-bg-secondary);
+    color: var(--admin-text);
+    border-color: var(--admin-primary);
+  }
+
+  :global(.admin-btn.danger:hover) {
+    background-color: var(--admin-danger-hover);
+  }
+
+  :global(.admin-btn.small) {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  /* Formularios modernos */
+  :global(.admin-form-group) {
+    margin-bottom: 24px;
+  }
+
+  :global(.admin-form-label) {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--admin-text);
+  }
+
+  :global(.admin-form-input),
+  :global(.admin-form-textarea),
+  :global(.admin-form-select) {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    background-color: var(--admin-bg);
+    color: var(--admin-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    min-height: 44px;
+  }
+
+  :global(.admin-form-input:focus),
+  :global(.admin-form-textarea:focus),
+  :global(.admin-form-select:focus) {
+    outline: none;
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgba(209, 0, 94, 0.1);
+  }
+
+  :global(.admin-form-textarea) {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+  }
+
+  :global(.admin-form-help) {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--admin-text-muted);
+    line-height: 1.4;
+  }
+
+  /* Alerts mejoradas */
+  :global(.admin-alert) {
+    padding: 16px 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    border-left: 4px solid;
+    font-weight: 500;
+  }
+
+  :global(.admin-alert.success) {
+    background-color: rgba(46, 213, 115, 0.1);
+    border-left-color: var(--admin-success);
+    color: var(--admin-success);
+  }
+
+  :global(.admin-alert.error) {
+    background-color: rgba(255, 71, 87, 0.1);
+    border-left-color: var(--admin-danger);
+    color: var(--admin-danger);
+  }
+
+  :global(.admin-alert.warning) {
+    background-color: rgba(255, 165, 2, 0.1);
+    border-left-color: var(--admin-warning);
+    color: var(--admin-warning);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .admin-header-content {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .admin-nav {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .theme-switcher {
+      margin-left: 0;
+      padding-left: 0;
+      border-left: none;
+      border-top: 1px solid var(--admin-border);
+      padding-top: 16px;
+    }
+
+    .admin-main {
+      padding: 24px 16px;
+    }
+
+    .admin-title {
+      font-size: 18px;
+    }
+
+    .admin-nav-link {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .admin-header-content {
+      padding: 0 16px;
+    }
+
+    .admin-main {
+      padding: 20px 12px;
+    }
+  }
+</style>

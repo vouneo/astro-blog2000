@@ -1,0 +1,230 @@
+---
+export const prerender = false;
+
+// Password desde variable de entorno
+const ADMIN_PASSWORD = import.meta.env.ADMIN_PASSWORD || 'change-this-password-123';
+
+let loginError = '';
+
+// Manejar el login
+if (Astro.request.method === 'POST') {
+  try {
+    const formData = await Astro.request.formData();
+    const password = formData.get('password') as string;
+    
+    if (password === ADMIN_PASSWORD) {
+      // Establecer cookie de autenticación
+      Astro.cookies.set('admin-auth', password, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 7 días
+        httpOnly: true,
+        secure: import.meta.env.PROD, // Solo HTTPS en producción
+        sameSite: 'strict'
+      });
+      
+      return Astro.redirect('/admin');
+    } else {
+      loginError = 'Invalid password';
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    loginError = 'Login error occurred';
+  }
+}
+
+// Si ya está autenticado, redirigir al admin
+const authCookie = Astro.cookies.get('admin-auth')?.value;
+if (authCookie === ADMIN_PASSWORD) {
+  return Astro.redirect('/admin');
+}
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - vouneo's blog</title>
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-form">
+        <h1>Admin Login</h1>
+        <p>Access to vouneo's blog administration</p>
+        
+        {loginError && (
+          <div class="rails-alert error">
+            {loginError}
+          </div>
+        )}
+        
+        <form method="POST">
+          <div class="rails-form-group">
+            <label for="password" class="rails-form-label">Password:</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="rails-form-input"
+              required 
+              autocomplete="current-password"
+              minlength="8"
+            />
+          </div>
+          
+          <div class="rails-form-group">
+            <button type="submit" class="rails-button">
+              Login
+            </button>
+          </div>
+        </form>
+        
+        <hr class="section-divider" />
+        
+        <div class="security-info">
+          <p class="login-help">
+            <small>🔒 Secure admin access</small>
+          </p>
+          
+          <p class="login-back">
+            <a href="/" class="admin-nav-link">← Back to Blog</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    background-color: #f5f5f5;
+    color: #333333;
+  }
+
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .login-form {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .login-form h1 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333333;
+  }
+
+  .login-form > p {
+    margin-bottom: 20px;
+    color: #666666;
+    font-size: 12px;
+  }
+
+  .rails-form-group {
+    margin-bottom: 15px;
+  }
+
+  .rails-form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .rails-form-input {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #cccccc;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    border-radius: 3px;
+  }
+
+  .rails-form-input:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 3px rgba(0, 102, 204, 0.3);
+  }
+
+  .rails-button {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 12px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 3px;
+    width: 100%;
+    font-weight: bold;
+  }
+
+  .rails-button:hover {
+    background-color: #0052a3;
+  }
+
+  .rails-alert {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+
+  .rails-alert.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 1px solid #cccccc;
+    margin: 20px 0;
+  }
+
+  .security-info {
+    text-align: center;
+  }
+
+  .login-help {
+    font-size: 11px;
+    color: #666666;
+    margin-bottom: 15px;
+  }
+
+  .login-back {
+    font-size: 11px;
+  }
+
+  .admin-nav-link {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  .admin-nav-link:hover {
+    text-decoration: underline;
+  }
+</style>

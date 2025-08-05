@@ -13,7 +13,7 @@ const { title, description = "vouneo's blog retro" } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="es" data-theme="retro">
+<html lang="es" data-theme="vintage-parchment">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -34,7 +34,7 @@ const { title, description = "vouneo's blog retro" } = Astro.props;
     <script>
       // Sistema de temas modernizado
       const themeManager = {
-        current: 'retro',
+        current: 'vintage-parchment',
         
         setTheme(theme: string) {
           this.current = theme;
@@ -44,7 +44,7 @@ const { title, description = "vouneo's blog retro" } = Astro.props;
         },
         
         initTheme() {
-          const saved = localStorage.getItem('selectedTheme') || 'retro';
+          const saved = localStorage.getItem('selectedTheme') || 'vintage-parchment';
           this.setTheme(saved);
         },
         

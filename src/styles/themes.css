@@ -1,6 +1,50 @@
-/* Temas usando solo CSS custom properties */
+/* Tema Hacker sin cambios */
+[data-theme="hacker"] {
+  --theme-bg: #0b0f0c;
+  --theme-text: #39ff14;
+  --theme-text-secondary: #1aff66;
+  --theme-header-bg: #001a00;
+  --theme-header-text: #39ff14;
+  --theme-link: #00ffcc;
+  --theme-accent: #00ff00;
+  --theme-accent-hover: #66ff66;
+  --theme-card-bg: #0f1f0f;
+  --theme-card-border: #33cc33;
+  --theme-muted: #66cc66;
+  --theme-button-bg: #003300;
+  --theme-button-text: #39ff14;
+  --theme-button-hover-text: #000;
+}
 
-/* Tema Crimson Gothic */
+[data-theme="hacker"] .retro-header {
+  background: linear-gradient(90deg, #001a00, #003300);
+}
+
+/* Nuevo tema Vintage Parchment inspirado en las imágenes */
+[data-theme="vintage-parchment"] {
+  --theme-bg: #f4f1e8;
+  --theme-text: #3e2723;
+  --theme-text-secondary: #5d4037;
+  --theme-header-bg: #ede7d9;
+  --theme-header-text: #3e2723;
+  --theme-link: #8d6e63;
+  --theme-accent: #6d4c41;
+  --theme-accent-hover: #5d4037;
+  --theme-card-bg: #faf8f3;
+  --theme-card-border: #d7ccc8;
+  --theme-muted: #8d6e63;
+  --theme-button-bg: #efebe9;
+  --theme-button-text: #3e2723;
+  --theme-button-hover-text: #f4f1e8;
+}
+
+[data-theme="vintage-parchment"] .retro-header {
+  background: linear-gradient(135deg, #ede7d9, #e8ddc7);
+  border-bottom: 2px solid #d7ccc8;
+  box-shadow: 0 2px 8px rgba(62, 39, 35, 0.1);
+}
+
+/* Tema Crimson Gothic sin cambios */
 [data-theme="crimson-gothic"] {
   --theme-bg: #0a0a0a;
   --theme-text: #e8e8e8;
@@ -23,28 +67,6 @@
   border-bottom: 2px solid var(--theme-accent);
 }
 
-/* Tema Hacker */
-[data-theme="hacker"] {
-  --theme-bg: #0b0f0c;
-  --theme-text: #39ff14;
-  --theme-text-secondary: #1aff66;
-  --theme-header-bg: #001a00;
-  --theme-header-text: #39ff14;
-  --theme-link: #00ffcc;
-  --theme-accent: #00ff00;
-  --theme-accent-hover: #66ff66;
-  --theme-card-bg: #0f1f0f;
-  --theme-card-border: #33cc33;
-  --theme-muted: #66cc66;
-  --theme-button-bg: #003300;
-  --theme-button-text: #39ff14;
-  --theme-button-hover-text: #000;
-}
-
-[data-theme="hacker"] .retro-header {
-  background: linear-gradient(90deg, #001a00, #003300);
-}
-
 /* Efectos especiales por tema */
 [data-theme="crimson-gothic"] .retro-card:hover {
   box-shadow: 0 8px 25px rgba(239, 68, 68, 0.2);
@@ -53,6 +75,12 @@
 
 [data-theme="hacker"] .retro-card:hover {
   box-shadow: 0 8px 25px rgba(0, 255, 0, 0.3);
+}
+
+[data-theme="vintage-parchment"] .retro-card:hover {
+  box-shadow: 0 8px 25px rgba(109, 76, 65, 0.15);
+  border-color: var(--theme-accent);
+  transform: translateY(-2px);
 }
 
 [data-theme="retro"] .retro-card:hover {
@@ -69,11 +97,88 @@
   color: var(--theme-accent);
 }
 
+[data-theme="vintage-parchment"] .nav-link:hover {
+  color: var(--theme-accent);
+  text-shadow: 0 1px 2px rgba(62, 39, 35, 0.2);
+}
+
 [data-theme="retro"] .nav-link:hover {
   text-shadow: 0 0 10px #FF00FF, 0 0 20px #FF66FF;
 }
 
-/* Efectos especiales para Crimson Gothic */
+/* Efectos especiales para Vintage Parchment */
+[data-theme="vintage-parchment"] .retro-card {
+  background: linear-gradient(145deg, #faf8f3, #f4f1e8);
+  border: 1px solid #d7ccc8;
+  box-shadow: 0 2px 8px rgba(62, 39, 35, 0.08);
+}
+
+[data-theme="vintage-parchment"] .retro-button:hover {
+  background: var(--theme-accent);
+  color: var(--theme-button-hover-text);
+  box-shadow: 0 4px 12px rgba(109, 76, 65, 0.2);
+}
+
+[data-theme="vintage-parchment"] .category-tag {
+  background: rgba(109, 76, 65, 0.1);
+  border-color: var(--theme-accent);
+  color: var(--theme-accent);
+  font-size: 0.7rem;
+  text-transform: lowercase;
+}
+
+/* Typography elegante para el tema vintage */
+[data-theme="vintage-parchment"] .card-title,
+[data-theme="vintage-parchment"] h1,
+[data-theme="vintage-parchment"] h2,
+[data-theme="vintage-parchment"] h3 {
+  color: var(--theme-text);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  text-shadow: 0 1px 2px rgba(62, 39, 35, 0.1);
+}
+
+[data-theme="vintage-parchment"] .header-title {
+  color: var(--theme-accent);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(109, 76, 65, 0.2);
+}
+
+/* Efectos de papel vintage */
+[data-theme="vintage-parchment"] body {
+  background-color: var(--theme-bg);
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(139, 110, 99, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(109, 76, 65, 0.02) 0%, transparent 50%);
+}
+
+[data-theme="vintage-parchment"] .retro-header {
+  background: linear-gradient(135deg, #ede7d9, #e8ddc7);
+  border-bottom: 1px solid #d7ccc8;
+  position: relative;
+}
+
+[data-theme="vintage-parchment"] .retro-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(109, 76, 65, 0.3), transparent);
+}
+
+/* Scrollbar para tema vintage */
+[data-theme="vintage-parchment"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--theme-accent), #8d6e63);
+  border-radius: 6px;
+}
+
+[data-theme="vintage-parchment"] ::-webkit-scrollbar-track {
+  background: var(--theme-bg);
+}
+
+/* Efectos especiales para Crimson Gothic (sin cambios) */
 [data-theme="crimson-gothic"] .retro-card {
   background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
   border: 1px solid #333333;
@@ -88,9 +193,11 @@
   background: rgba(239, 68, 68, 0.1);
   border-color: var(--theme-accent);
   color: var(--theme-accent);
+  font-size: 0.7rem;
+  text-transform: lowercase;
 }
 
-/* Typography elegante para el tema gótico */
+/* Typography para Crimson Gothic */
 [data-theme="crimson-gothic"] .card-title,
 [data-theme="crimson-gothic"] h1,
 [data-theme="crimson-gothic"] h2,
@@ -107,70 +214,4 @@
 /* Transiciones suaves entre temas */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-/* Agregar estas reglas adicionales al final de themes.css */
-
-/* Mejoras tipográficas para Crimson Gothic */
-[data-theme="crimson-gothic"] {
-  font-family: 'Georgia', 'Times New Roman', serif;
-}
-
-[data-theme="crimson-gothic"] .header-title,
-[data-theme="crimson-gothic"] .card-title {
-  font-family: 'Verdana', sans-serif;
-  letter-spacing: 0.5px;
-}
-
-/* Efectos de glassmorphism sutil */
-[data-theme="crimson-gothic"] .retro-card {
-  backdrop-filter: blur(10px);
-  background: rgba(26, 26, 26, 0.9);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-/* Accent elegante para el footer */
-[data-theme="crimson-gothic"] footer {
-  background: linear-gradient(135deg, #000000, #1a0000);
-  border-top: 1px solid var(--theme-accent);
-}
-
-/* Hover states más sofisticados */
-[data-theme="crimson-gothic"] .nav-link {
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-}
-
-[data-theme="crimson-gothic"] .retro-card {
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-}
-
-[data-theme="crimson-gothic"] .retro-card:hover {
-  transform: translateY(-4px) scale(1.02);
-}
-
-/* Elementos decorativos */
-[data-theme="crimson-gothic"] .card-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 100%;
-  background: linear-gradient(to bottom, transparent, var(--theme-accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-[data-theme="crimson-gothic"] .retro-card:hover .card-content::before {
-  opacity: 0.7;
-}
-
-/* Scrollbar elegante */
-[data-theme="crimson-gothic"] ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--theme-accent), #dc2626);
-  border-radius: 6px;
-}
-
-[data-theme="crimson-gothic"] ::-webkit-scrollbar-track {
-  background: #0a0a0a;
 }

@@ -1,0 +1,645 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../../components/AdminLayout.astro';
+import { getAllPosts, deletePost } from '../../../utils/admin.ts';
+
+let message = '';
+let messageType = '';
+
+// Manejar eliminación de posts
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const action = formData.get('action') as string;
+  const slug = formData.get('slug') as string;
+  
+  if (action === 'delete' && slug) {
+    const success = await deletePost(slug);
+    if (success) {
+      message = `Post "${slug}" deleted successfully.`;
+      messageType = 'success';
+    } else {
+      message = `Error deleting post "${slug}".`;
+      messageType = 'error';
+    }
+  }
+}
+
+// Obtener todos los posts
+const posts = await getAllPosts();
+
+// Filtros
+const status = Astro.url.searchParams.get('status') || 'all';
+const filteredPosts = posts.filter(post => {
+  if (status === 'published') return post.data.published;
+  if (status === 'draft') return !post.data.published;
+  return true; // 'all'
+});
+
+// Mensaje de creación exitosa
+const createdSlug = Astro.url.searchParams.get('created');
+if (createdSlug && !message) {
+  message = `Post "${createdSlug}" created successfully!`;
+  messageType = 'success';
+}
+---
+
+<AdminLayout title="Posts Management">
+  <div class="posts-management">
+    <!-- Header mejorado -->
+    <header class="page-header">
+      <div class="header-main">
+        <h1 class="page-title">Posts Management</h1>
+        <p class="page-subtitle">Create, edit and manage all your blog posts</p>
+      </div>
+      <div class="header-actions">
+        <a href="/admin/posts/new" class="admin-btn">
+          ✍️ New Post
+        </a>
+        <a href="/admin" class="admin-btn secondary">
+          ← Dashboard
+        </a>
+      </div>
+    </header>
+
+    <!-- Mensaje de estado -->
+    {message && (
+      <div class={`admin-alert ${messageType}`}>
+        {message}
+      </div>
+    )}
+
+    <!-- Stats rápidas -->
+    <div class="posts-stats">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📝</div>
+          <div class="stat-content">
+            <div class="stat-number">{posts.length}</div>
+            <div class="stat-label">Total Posts</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <div class="stat-number">{posts.filter(p => p.data.published).length}</div>
+            <div class="stat-label">Published</div>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon">📄</div>
+          <div class="stat-content">
+            <div class="stat-number">{posts.filter(p => !p.data.published).length}</div>
+            <div class="stat-label">Drafts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros mejorados -->
+    <div class="filters-section">
+      <div class="admin-card">
+        <div class="admin-card-body">
+          <div class="filters-content">
+            <div class="filter-label">
+              <span>📂 Show:</span>
+            </div>
+            <div class="filter-tabs">
+              <a 
+                href="/admin/posts" 
+                class={`filter-tab ${status === 'all' ? 'active' : ''}`}
+              >
+                All ({posts.length})
+              </a>
+              <a 
+                href="/admin/posts?status=published" 
+                class={`filter-tab ${status === 'published' ? 'active' : ''}`}
+              >
+                Published ({posts.filter(p => p.data.published).length})
+              </a>
+              <a 
+                href="/admin/posts?status=draft" 
+                class={`filter-tab ${status === 'draft' ? 'active' : ''}`}
+              >
+                Drafts ({posts.filter(p => !p.data.published).length})
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de posts mejorada -->
+    {filteredPosts.length > 0 ? (
+      <div class="posts-section">
+        <div class="posts-table-wrapper">
+          <table class="admin-table enhanced">
+            <thead>
+              <tr>
+                <th class="col-post">Post</th>
+                <th class="col-date">Date</th>
+                <th class="col-categories">Categories</th>
+                <th class="col-status">Status</th>
+                <th class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredPosts.map((post) => (
+                <tr class="post-row">
+                  <td class="post-info">
+                    <div class="post-title">{post.data.title}</div>
+                    <div class="post-description">{post.data.description}</div>
+                    <div class="post-meta">
+                      <span class="post-slug">Slug: {post.slug}</span>
+                    </div>
+                  </td>
+                  <td class="post-date">
+                    <div class="date-display">
+                      {new Date(post.data.date).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </div>
+                  </td>
+                  <td class="post-categories">
+                    {post.data.categories && post.data.categories.length > 0 ? (
+                      <div class="categories-list">
+                        {post.data.categories.map(cat => (
+                          <span class="category-tag">{cat}</span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span class="no-categories">No categories</span>
+                    )}
+                  </td>
+                  <td class="post-status">
+                    <span class={`status-badge ${post.data.published ? 'published' : 'draft'}`}>
+                      {post.data.published ? '✅ Published' : '📄 Draft'}
+                    </span>
+                  </td>
+                  <td class="post-actions">
+                    <div class="action-buttons">
+                      <a href={`/admin/posts/${post.slug}/edit`} class="btn-edit">
+                        ✏️ Edit
+                      </a>
+                      <a href={`/posts/${post.slug}`} target="_blank" class="btn-view">
+                        👁️ View
+                      </a>
+                      <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this post? This action cannot be undone.')">
+                        <input type="hidden" name="action" value="delete" />
+                        <input type="hidden" name="slug" value={post.slug} />
+                        <button type="submit" class="btn-delete">
+                          🗑️ Delete
+                        </button>
+                      </form>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ) : (
+      <div class="empty-state">
+        <div class="empty-content">
+          <div class="empty-icon">📝</div>
+          <h3>No {status === 'all' ? '' : status} posts found</h3>
+          <p>
+            {status === 'all' 
+              ? 'Create your first blog post to get started!' 
+              : `No ${status} posts available. Try a different filter.`
+            }
+          </p>
+          <div class="empty-actions">
+            {status === 'all' ? (
+              <a href="/admin/posts/new" class="admin-btn">
+                ✍️ Create First Post
+              </a>
+            ) : (
+              <a href="/admin/posts" class="admin-btn secondary">
+                📂 View All Posts
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</AdminLayout>
+
+<style>
+  .posts-management {
+    max-width: 100%;
+  }
+
+  /* Header mejorado */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    gap: 20px;
+  }
+
+  .header-main {
+    flex: 1;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  /* Stats section */
+  .posts-stats {
+    margin-bottom: 30px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .stat-card {
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px var(--admin-shadow);
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--admin-shadow-hover);
+  }
+
+  .stat-icon {
+    font-size: 24px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--admin-primary), var(--admin-primary-hover));
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .stat-content {
+    flex: 1;
+  }
+
+  .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--admin-text);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--admin-text-secondary);
+    font-weight: 500;
+  }
+
+  /* Filtros mejorados */
+  .filters-section {
+    margin-bottom: 30px;
+  }
+
+  .filters-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-weight: 600;
+    color: var(--admin-text);
+    font-size: 14px;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--admin-bg-secondary);
+    padding: 4px;
+    border-radius: 8px;
+  }
+
+  .filter-tab {
+    color: var(--admin-text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .filter-tab:hover {
+    background-color: var(--admin-bg);
+    color: var(--admin-text);
+  }
+
+  .filter-tab.active {
+    background-color: var(--admin-primary);
+    color: white;
+    font-weight: 600;
+  }
+
+  /* Tabla mejorada */
+  .posts-section {
+    margin-bottom: 30px;
+  }
+
+  .posts-table-wrapper {
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--admin-shadow);
+  }
+
+  .admin-table.enhanced {
+    margin: 0;
+  }
+
+  .admin-table.enhanced th {
+    background: var(--admin-bg-secondary);
+    padding: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--admin-text);
+    border-bottom: 2px solid var(--admin-border);
+  }
+
+  .admin-table.enhanced td {
+    padding: 20px;
+    border-bottom: 1px solid var(--admin-border-light);
+    vertical-align: top;
+  }
+
+  .post-row:hover {
+    background: var(--admin-bg-secondary);
+  }
+
+  /* Columnas específicas */
+  .col-post {
+    width: 35%;
+    min-width: 300px;
+  }
+
+  .col-date {
+    width: 12%;
+    min-width: 100px;
+  }
+
+  .col-categories {
+    width: 20%;
+    min-width: 150px;
+  }
+
+  .col-status {
+    width: 13%;
+    min-width: 100px;
+  }
+
+  .col-actions {
+    width: 20%;
+    min-width: 200px;
+  }
+
+  /* Contenido de celdas */
+  .post-info {
+    min-width: 0;
+  }
+
+  .post-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--admin-text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .post-description {
+    font-size: 14px;
+    color: var(--admin-text-secondary);
+    line-height: 1.4;
+    margin-bottom: 6px;
+  }
+
+  .post-meta {
+    font-size: 12px;
+    color: var(--admin-text-muted);
+  }
+
+  .post-slug {
+    font-family: monospace;
+  }
+
+  .date-display {
+    font-size: 13px;
+    color: var(--admin-text-secondary);
+    font-weight: 500;
+  }
+
+  /* Categorías */
+  .categories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .category-tag {
+    background: var(--admin-bg-secondary);
+    color: var(--admin-primary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--admin-border);
+  }
+
+  .no-categories {
+    color: var(--admin-text-muted);
+    font-style: italic;
+    font-size: 12px;
+  }
+
+  /* Status badges */
+  .status-badge {
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .status-badge.published {
+    background: rgba(46, 213, 115, 0.15);
+    color: #2ed573;
+    border: 1px solid rgba(46, 213, 115, 0.3);
+  }
+
+  .status-badge.draft {
+    background: rgba(255, 165, 2, 0.15);
+    color: #ffa502;
+    border: 1px solid rgba(255, 165, 2, 0.3);
+  }
+
+  /* Botones de acción - alineados horizontalmente */
+  .action-buttons {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .btn-edit,
+  .btn-view,
+  .btn-delete {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+    border: 1px solid;
+    cursor: pointer;
+    background: none;
+    font-family: inherit;
+  }
+
+  .btn-edit {
+    background: var(--admin-primary);
+    color: white;
+    border-color: var(--admin-primary);
+  }
+
+  .btn-edit:hover {
+    background: var(--admin-primary-hover);
+    box-shadow: 0 2px 8px rgba(209, 0, 94, 0.3);
+  }
+
+  .btn-view {
+    background: transparent;
+    color: var(--admin-text-secondary);
+    border-color: var(--admin-border);
+  }
+
+  .btn-view:hover {
+    background: var(--admin-bg-secondary);
+    color: var(--admin-text);
+  }
+
+  .btn-delete {
+    background: transparent;
+    color: var(--admin-danger);
+    border-color: var(--admin-danger);
+  }
+
+  .btn-delete:hover {
+    background: var(--admin-danger);
+    color: white;
+  }
+
+  /* Empty state */
+  .empty-state {
+    background: var(--admin-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px var(--admin-shadow);
+  }
+
+  .empty-content {
+    text-align: center;
+    padding: 60px 40px;
+  }
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .empty-content h3 {
+    font-size: 20px;
+    color: var(--admin-text);
+    margin-bottom: 8px;
+  }
+
+  .empty-content p {
+    font-size: 15px;
+    color: var(--admin-text-secondary);
+    margin-bottom: 25px;
+    line-height: 1.5;
+  }
+
+  .empty-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .col-categories {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .header-actions {
+      justify-content: center;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .filters-content {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .filter-tabs {
+      justify-content: center;
+    }
+
+    .col-date,
+    .col-status {
+      display: none;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+    }
+
+    .admin-table.enhanced th,
+    .admin-table.enhanced td {
+      padding: 15px 10px;
+    }
+  }
+</style>

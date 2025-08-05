@@ -1,0 +1,380 @@
+---
+export const prerender = false;
+
+import AdminLayout from '../../../components/AdminLayout.astro';
+import { createPost, validatePostData } from '../../../utils/admin.ts';
+
+let message = '';
+let messageType = '';
+let formData = {
+  title: '',
+  description: '',
+  date: new Date().toISOString().split('T')[0],
+  categories: '',
+  published: true,
+  thumbnail: '',
+  content: ''
+};
+
+// Manejar creación de post
+if (Astro.request.method === 'POST') {
+  try {
+    const data = await Astro.request.formData();
+    
+    const postData = {
+      title: (data.get('title') as string) || '',
+      description: (data.get('description') as string) || '',
+      date: (data.get('date') as string) || '',
+      categories: ((data.get('categories') as string) || '').split(',').map(c => c.trim()).filter(c => c),
+      published: data.get('published') === 'on',
+      thumbnail: (data.get('thumbnail') as string) || '',
+      content: (data.get('content') as string) || ''
+    };
+
+    const errors = validatePostData(postData);
+    
+    if (errors.length === 0) {
+      const slug = await createPost(postData);
+      
+      if (slug) {
+        return Astro.redirect(`/admin/posts?created=${encodeURIComponent(slug)}`);
+      } else {
+        message = 'Error creating post. Check if title already exists.';
+        messageType = 'error';
+      }
+    } else {
+      message = 'Validation errors: ' + errors.join(', ');
+      messageType = 'error';
+      formData = { ...postData, categories: postData.categories.join(', ') };
+    }
+  } catch (error) {
+    console.error('Error creating post:', error);
+    message = 'An error occurred while creating the post.';
+    messageType = 'error';
+  }
+}
+---
+
+<AdminLayout title="New Post">
+  <div class="new-post">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="header-main">
+        <h1 class="page-title">Create New Post</h1>
+        <p class="page-subtitle">Write a new blog post with Markdown support</p>
+      </div>
+      <div class="header-actions">
+        <a href="/admin/posts" class="admin-btn secondary">
+          ← Back to Posts
+        </a>
+      </div>
+    </header>
+
+    <!-- Mensaje de estado -->
+    {message && (
+      <div class={`admin-alert ${messageType}`}>
+        {message}
+      </div>
+    )}
+
+    <!-- Formulario de creación -->
+    <div class="edit-layout">
+      <form method="POST" class="edit-form">
+        <!-- Contenido principal -->
+        <div class="content-section">
+          <div class="admin-card">
+            <div class="admin-card-body">
+              <div class="admin-form-group">
+                <label for="title" class="admin-form-label">Title *</label>
+                <input 
+                  type="text" 
+                  id="title" 
+                  name="title" 
+                  class="admin-form-input"
+                  value={formData.title}
+                  required 
+                  placeholder="Enter post title"
+                />
+                <small class="admin-form-help">The slug will be generated automatically from the title</small>
+              </div>
+
+              <div class="admin-form-group">
+                <label for="description" class="admin-form-label">Description *</label>
+                <textarea 
+                  id="description" 
+                  name="description" 
+                  class="admin-form-textarea"
+                  rows="3"
+                  required 
+                  placeholder="Brief description of the post"
+                >{formData.description}</textarea>
+                <small class="admin-form-help">This will appear in post cards and meta description</small>
+              </div>
+
+              <div class="admin-form-group">
+                <label for="content" class="admin-form-label">Content *</label>
+                <textarea 
+                  id="content" 
+                  name="content" 
+                  class="admin-form-textarea content-editor"
+                  required 
+                  placeholder="Write your post content in Markdown..."
+                >{formData.content}</textarea>
+                <small class="admin-form-help">
+                  You can use Markdown syntax. Images: ![alt](src), Links: [text](url)
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar con metadatos -->
+        <aside class="sidebar-section">
+          <!-- Publication settings -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>📅 Publication</h3>
+            </div>
+            <div class="admin-card-body">
+              <div class="admin-form-group">
+                <label for="date" class="admin-form-label">Publication Date</label>
+                <input 
+                  type="date" 
+                  id="date" 
+                  name="date" 
+                  class="admin-form-input"
+                  value={formData.date}
+                  required 
+                />
+              </div>
+
+              <div class="admin-form-group">
+                <label class="checkbox-label">
+                  <input 
+                    type="checkbox" 
+                    name="published" 
+                    checked={formData.published}
+                  />
+                  <span class="checkmark"></span>
+                  Published
+                </label>
+                <small class="admin-form-help">Uncheck to save as draft</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Categorization -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>🏷️ Categorization</h3>
+            </div>
+            <div class="admin-card-body">
+              <div class="admin-form-group">
+                <label for="categories" class="admin-form-label">Categories</label>
+                <input 
+                  type="text" 
+                  id="categories" 
+                  name="categories" 
+                  class="admin-form-input"
+                  value={formData.categories}
+                  placeholder="black metal, ideas, música"
+                />
+                <small class="admin-form-help">Separate multiple categories with commas</small>
+              </div>
+
+              <div class="admin-form-group">
+                <label for="thumbnail" class="admin-form-label">Thumbnail URL</label>
+                <input 
+                  type="url" 
+                  id="thumbnail" 
+                  name="thumbnail" 
+                  class="admin-form-input"
+                  value={formData.thumbnail}
+                  placeholder="/img/thumbnails/post.jpg"
+                />
+                <small class="admin-form-help">Optional: URL to post thumbnail image</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="admin-card">
+            <div class="admin-card-header">
+              <h3>💾 Actions</h3>
+            </div>
+            <div class="admin-card-body">
+              <div class="action-buttons">
+                <button type="submit" class="admin-btn">
+                  Create Post
+                </button>
+                <a href="/admin/posts" class="admin-btn secondary">
+                  Cancel
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </form>
+    </div>
+
+    <!-- Markdown help -->
+    <div class="admin-card markdown-help">
+      <div class="admin-card-header">
+        <h3>📝 Markdown Quick Reference</h3>
+      </div>
+      <div class="admin-card-body">
+        <div class="help-grid">
+          <div class="help-item">
+            <strong>Headers:</strong><br>
+            <code># H1</code>, <code>## H2</code>, <code>### H3</code>
+          </div>
+          <div class="help-item">
+            <strong>Text:</strong><br>
+            <code>**bold**</code>, <code>*italic*</code>, <code>`code`</code>
+          </div>
+          <div class="help-item">
+            <strong>Links:</strong><br>
+            <code>[text](url)</code>, <code>![alt](image.jpg)</code>
+          </div>
+          <div class="help-item">
+            <strong>Lists:</strong><br>
+            <code>- Item 1</code>, <code>1. Numbered</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<style>
+  .new-post {
+    max-width: 100%;
+  }
+
+  /* Header */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+    gap: 20px;
+  }
+
+  .header-main {
+    flex: 1;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  /* Layout principal - 70/30 split */
+  .edit-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 25px;
+    align-items: start;
+  }
+
+  .content-section {
+    min-width: 0;
+  }
+
+  .sidebar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Editor de contenido */
+  .content-editor {
+    min-height: 500px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  /* Checkbox personalizado */
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+  }
+
+  /* Action buttons */
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-buttons .admin-btn {
+    justify-content: center;
+  }
+
+  /* Markdown help */
+  .markdown-help {
+    margin-top: 30px;
+  }
+
+  .help-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .help-item {
+    font-size: 12px;
+  }
+
+  .help-item strong {
+    color: var(--admin-primary);
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .help-item code {
+    background-color: var(--admin-bg-secondary);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 11px;
+    margin-right: 5px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .edit-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar-section {
+      order: -1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .header-actions {
+      justify-content: center;
+    }
+
+    .help-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
