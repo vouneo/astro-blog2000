@@ -1,8 +1,12 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
+import vercelServerless from '@astrojs/vercel';
+
 
 export default defineConfig({
-  output: 'hybrid', // Permite páginas dinámicas y estáticas
+  output: 'server',
+    adapter: vercelServerless(),
+
   integrations: [
     tailwind({
       applyBaseStyles: true,
