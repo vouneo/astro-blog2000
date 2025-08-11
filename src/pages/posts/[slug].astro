@@ -2,15 +2,19 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/BaseLayout.astro';
 
-export async function getStaticPaths() {
-  const posts = await getCollection('posts');
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+// En modo SSR, necesitamos obtener el post dinámicamente
+const { slug } = Astro.params;
+
+// Obtener el post específico
+const posts = await getCollection('posts');
+const post = posts.find(p => p.slug === slug);
+
+// Si no existe el post, redirigir al inicio
+if (!post) {
+  return Astro.redirect('/');
 }
 
-const { post } = Astro.props;
+// Renderizar el contenido
 const { Content } = await post.render();
 
 const formatDate = (date: Date) => {
