@@ -1,15 +1,15 @@
-import { l as ROUTE_TYPE_HEADER, n as REROUTE_DIRECTIVE_HEADER, D as DEFAULT_404_COMPONENT, A as AstroError, o as ActionNotFoundError, p as clientAddressSymbol, L as LocalsNotAnObject, q as REROUTABLE_STATUS_CODES, s as responseSentSymbol } from './astro/server_BTroRIYt.mjs';
+import { l as ROUTE_TYPE_HEADER, n as REROUTE_DIRECTIVE_HEADER, D as DEFAULT_404_COMPONENT, A as AstroError, o as ActionNotFoundError, p as clientAddressSymbol, L as LocalsNotAnObject, q as REROUTABLE_STATUS_CODES, s as responseSentSymbol } from './astro/server_hy3IuY0t.mjs';
 import { bold, red, yellow, dim, blue } from 'kleur/colors';
 import 'clsx';
 import 'cookie';
-import { D as DEFAULT_404_ROUTE, d as default404Instance, e as ensure404Route } from './astro-designed-error-pages_NepDnmfe.mjs';
+import { D as DEFAULT_404_ROUTE, d as default404Instance, e as ensure404Route } from './astro-designed-error-pages_BufnLSDG.mjs';
 import 'es-module-lexer';
 import buffer from 'node:buffer';
 import crypto$1 from 'node:crypto';
 import { Http2ServerResponse } from 'node:http2';
 import { f as fileExtension, j as joinPaths, s as slash, p as prependForwardSlash, a as removeTrailingForwardSlash, b as appendForwardSlash, c as isInternalPath, d as collapseDuplicateTrailingSlashes, h as hasFileExtension } from './path_aMDqWP_G.mjs';
-import { r as requestIs404Or500, i as isRequestServerIsland, n as notFound, a as redirectToFallback, b as redirectToDefaultLocale, c as requestHasLocale, e as normalizeTheLocale, d as defineMiddleware, S as SERVER_ISLAND_COMPONENT, f as SERVER_ISLAND_ROUTE, g as createEndpoint, R as RouteCache, s as sequence, h as findRouteToRewrite, m as matchRoute, j as RenderContext, P as PERSIST_SYMBOL, k as getSetCookiesFromResponse } from './index_BSqD6cF_.mjs';
-import { N as NOOP_MIDDLEWARE_FN } from './noop-middleware_UXa0aXNV.mjs';
+import { r as requestIs404Or500, i as isRequestServerIsland, n as notFound, a as redirectToFallback, b as redirectToDefaultLocale, c as requestHasLocale, e as normalizeTheLocale, d as defineMiddleware, S as SERVER_ISLAND_COMPONENT, f as SERVER_ISLAND_ROUTE, g as createEndpoint, R as RouteCache, s as sequence, h as findRouteToRewrite, m as matchRoute, j as RenderContext, P as PERSIST_SYMBOL, k as getSetCookiesFromResponse } from './index_B-VLC1P-.mjs';
+import { N as NOOP_MIDDLEWARE_FN } from './noop-middleware_DXaVjId_.mjs';
 import 'fast-glob';
 import nodePath from 'node:path';
 

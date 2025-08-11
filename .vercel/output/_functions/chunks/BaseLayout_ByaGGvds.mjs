@@ -4,7 +4,7 @@ import pLimit from 'p-limit';
 import { z } from 'zod';
 import { r as removeBase, i as isRemotePath, p as prependForwardSlash } from './path_aMDqWP_G.mjs';
 import { V as VALID_INPUT_FORMATS } from './consts_BmVDRGlB.mjs';
-import { A as AstroError, U as UnknownContentCollectionError, c as createComponent, R as RenderUndefinedEntryError, u as unescapeHTML, b as renderTemplate, h as renderUniqueStylesheet, i as renderScriptElement, j as createHeadAndContent, d as renderComponent, m as maybeRenderHead, e as addAttribute, a as createAstro, r as renderHead, f as renderSlot, g as renderScript } from './astro/server_BTroRIYt.mjs';
+import { A as AstroError, U as UnknownContentCollectionError, c as createComponent, R as RenderUndefinedEntryError, u as unescapeHTML, b as renderTemplate, h as renderUniqueStylesheet, i as renderScriptElement, j as createHeadAndContent, d as renderComponent, m as maybeRenderHead, e as addAttribute, a as createAstro, r as renderHead, f as renderSlot, g as renderScript } from './astro/server_hy3IuY0t.mjs';
 import 'kleur/colors';
 import * as devalue from 'devalue';
 import 'clsx';
@@ -68,7 +68,7 @@ class ImmutableDataStore {
    */
   static async fromModule() {
     try {
-      const data = await import('./_astro_data-layer-content_DivL6J6u.mjs');
+      const data = await import('./_astro_data-layer-content_DRshUnlr.mjs');
       if (data.default instanceof Map) {
         return ImmutableDataStore.fromMap(data.default);
       }
@@ -227,7 +227,7 @@ const CONTENT_LAYER_IMAGE_REGEX = /__ASTRO_IMAGE_="([^"]+)"/g;
 async function updateImageReferencesInBody(html, fileName) {
   const { default: imageAssetMap } = await import('./content-assets_DleWbedO.mjs');
   const imageObjects = /* @__PURE__ */ new Map();
-  const { getImage } = await import('./_astro_assets_BuQlwZKW.mjs').then(n => n._);
+  const { getImage } = await import('./_astro_assets_DQswMU8K.mjs').then(n => n._);
   for (const [_full, imagePath] of html.matchAll(CONTENT_LAYER_IMAGE_REGEX)) {
     try {
       const decodedImagePath = JSON.parse(imagePath.replaceAll("&#x22;", '"'));

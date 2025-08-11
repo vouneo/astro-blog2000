@@ -1,22 +1,20 @@
 /* empty css                                    */
-import { c as createComponent, a as createAstro, d as renderComponent, b as renderTemplate, m as maybeRenderHead, e as addAttribute } from '../../chunks/astro/server_BTroRIYt.mjs';
+import { c as createComponent, a as createAstro, d as renderComponent, b as renderTemplate, m as maybeRenderHead, e as addAttribute } from '../../chunks/astro/server_hy3IuY0t.mjs';
 import 'kleur/colors';
-import { g as getCollection, $ as $$BaseLayout } from '../../chunks/BaseLayout_DggWcQMt.mjs';
+import { g as getCollection, $ as $$BaseLayout } from '../../chunks/BaseLayout_ByaGGvds.mjs';
 /* empty css                                     */
 export { renderers } from '../../renderers.mjs';
 
 const $$Astro = createAstro();
-async function getStaticPaths() {
-  const posts = await getCollection("posts");
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post }
-  }));
-}
 const $$slug = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$slug;
-  const { post } = Astro2.props;
+  const { slug } = Astro2.params;
+  const posts = await getCollection("posts");
+  const post = posts.find((p) => p.slug === slug);
+  if (!post) {
+    return Astro2.redirect("/");
+  }
   const { Content } = await post.render();
   const formatDate = (date) => {
     return new Intl.DateTimeFormat("es-ES", {
@@ -52,7 +50,6 @@ const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: $$slug,
   file: $$file,
-  getStaticPaths,
   url: $$url
 }, Symbol.toStringTag, { value: 'Module' }));
 
